@@ -311,6 +311,15 @@ int test() {
   return 0;
 }
 
+uint32_t genere32(E0 *state) {
+  int i;
+  uint32_t res = 0;
+  for (i = 0; i < 32; i++) {
+    res += (next_bit(state) << i); 
+  }
+  return res;
+}
+
 
 
 

@@ -55,6 +55,7 @@ void cycle_lfsr(E0 *state);
 void calcul_fsm(E0 *state);
 
 uint8_t next_bit(E0 *state);
+uint32_t genere32(E0 *state);
 
 
 #endif
