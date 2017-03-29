@@ -16,7 +16,7 @@ int rdtsc()
 	__asm__ __volatile__("rdtsc");
 }
 
-int main()
+void test()
 {
 	word16 x=1111; // nombre entre 1000 et 9999 pour Von Neumann
 	struct mt19937p mt; // Pour Mersenne-Twister
@@ -37,12 +37,23 @@ int main()
 	output_VN = Von_Neumann(&x); // Von Neumann
 	output_MT = genrand(&mt); // Mersenne-Twister
 
+	int i;
 
-	// affichage
-	printf("- Generation de nombres aleatoires -\n");
-	printf("Von Neumann : %u\n",output_VN);
-	printf("Mersenne Twister : %u\n",output_MT);
+	for (i=0; i<10; i++)
+	{
+		// affichage
+		printf("- Generation de nombres aleatoires -\n");
+		printf("Von Neumann : %u\n",output_VN);
+		printf("Mersenne Twister : %u\n",output_MT);
+	}
+}
 
+
+
+int main()
+{
+	
+	test();
 
 	return 0;
 }
