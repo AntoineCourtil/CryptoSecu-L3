@@ -144,10 +144,13 @@ void print_E0(E0 *state){
   print_lfsr3(state);
   print_lfsr4(state);*/
 
-  printf("    X1 = %lu\n", get_bit(state->lfsr_1_4, 23));
-  printf("    X2 = %lu\n", get_bit(state->lfsr_2_3, 23));
-  printf("    X3 = %lu\n", get_bit(state->lfsr_2_3, 31+31));
-  printf("    X4 = %lu\n", get_bit(state->lfsr_1_4, 36+25));
+  printf("\n\n  X1 X2 X3 X4\n");
+  printf("  %lu  %lu  %lu  %lu\n\n", 
+    get_bit(state->lfsr_1_4, 23),
+    get_bit(state->lfsr_2_3, 23),
+    get_bit(state->lfsr_2_3, 31+31),
+    get_bit(state->lfsr_1_4, 36+25)
+  );
 
   printf("Yt 0x%x\n" , (state->fsm & 0x70) >> 4);
   printf("Ct 0x%x\n" , state->fsm & 0x03);
@@ -156,7 +159,6 @@ void print_E0(E0 *state){
 
 void cycle_lfsr(E0 *state) {
 
-  printf("\n-----------------\n");
 
   uint8_t xor;
 
@@ -229,7 +231,6 @@ void cycle_lfsr(E0 *state) {
   left_shift(state->lfsr_2_3);
 
 
-  printf("-----------------\n\n");
 }
 
 
