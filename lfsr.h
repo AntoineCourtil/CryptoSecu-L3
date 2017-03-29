@@ -48,7 +48,7 @@ void print_lsfr3(E0 *state);
 void print_lsfr4(E0 *state);
 void print_E0(E0 *state);
 
-int test();
+int testLFSR();
 void lfsr();
 
 void cycle_lfsr(E0 *state);

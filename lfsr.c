@@ -242,13 +242,13 @@ void calcul_fsm(E0 *state){
 
   yt = get_bit(state->lfsr_1_4, 23) + get_bit(state->lfsr_2_3, 23) + get_bit(state->lfsr_2_3, 31+31) + get_bit(state->lfsr_1_4, 25+37) ;
 
-  printf("yt = %d\n", yt);
+  //printf("yt = %d\n", yt);
 
   state->out = get_bit(yt, 0);
 
   st_1 = 2 * get_bit(state->fsm, 6) + get_bit(state->fsm, 5);
 
-  printf("st+1 = %d\n", st_1);
+  //printf("st+1 = %d\n", st_1);
 
   set_bit(ct_1, 1,
     get_bit(st_1, 1) ^
@@ -285,7 +285,7 @@ uint8_t next_bit(E0 *state){
 }
 
 
-int test() {
+int testLFSR() {
 
   int i ;
   E0 state;
@@ -323,10 +323,10 @@ uint32_t genere32(E0 *state) {
 
 
 
-int main() {
+void lfsr() {
 
    printf("\n[+] Test LFSR : \n\n");
 
-  test();
+  testLFSR();
 
 }
