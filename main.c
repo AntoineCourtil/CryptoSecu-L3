@@ -48,10 +48,10 @@ double frequency(int n, int* tab){
 	}
 
 
-	//printf("RES : %d\n", res);
+	printf("Difference des bits : %d\n", res);
 
 	sobs = abs(res)/sqrt(n);
-	//printf("SOBS : %f\n", sobs);
+	printf("S(obs) : %f\n", sobs);
 
 	pValeur = erfc(sobs/sqrt(2));
 	//printf("pValeur : %f\n", pValeur);
@@ -94,9 +94,9 @@ double runs(int n, int* tab){
 
 	pi = res / (double)n;
 
-	//printf("PI : %f\n", pi);
+	printf("Pi : %f\n", pi);
 
-	//printf("vObs : %d\n", vObs);
+	printf("V(obs) : %d\n", vObs);
 
 	r = 2 / sqrt(n);
 
@@ -104,8 +104,9 @@ double runs(int n, int* tab){
 		return 0.0;
 	}
 
-	//printf("		a	 : %f\n", abs(vObs - 2*n*pi*(1-pi)) / 2*sqrt(2*n)*(1-pi));
-
+	//printf("		a	 : %f\n", abs(vObs - 2*n*pi*(1-pi)));
+	//printf("		b	 : %f\n", 2*sqrt(2*n)*(1-pi));
+	
 	pValeur = erfc ( abs(vObs - 2*n*pi*(1-pi)) / 2*sqrt(2*n)*(1-pi) );
 
 	return pValeur;
@@ -115,8 +116,11 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	int i;
 	FILE *f = fopen(filename, "w");
 
+	int random;
+	random = rand() % 9000 + 1000;
+
 	// Init Von Neumann
-	word16 x=1664; // nombre entre 1000 et 9999 pour Von Neumann
+	word16 x=random; // nombre entre 1000 et 9999 pour Von Neumann
 	word16 output_VN; // sortie pour pour Von Neumann
 
 	int tab[nb];
@@ -136,13 +140,14 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*16, tab);
 
+	printf("  Frequency : %f\n\n", freq);
+
 	double run;
 	run = runs(nb*16, tab);
+	
+	printf("  Runs : %f\n", run);
 
-	printf("Frequency : %f\n", freq);
-	printf("Runs : %f\n", run);
-
-	printf("Von_Neumann fini\n\n");
+	printf("\n	Von_Neumann fini\n\n");
 	fclose(f);
 }
 
@@ -175,13 +180,14 @@ void generate_mersenneTwister(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*32, tab);
 
+	printf("  Frequency : %f\n\n", freq);
+
 	double run;
-	run = runs(nb*16, tab);
+	run = runs(nb*32, tab);
 
-	printf("Frequency : %f\n", freq);
-	printf("Runs : %f\n", run);
+	printf("\n  Runs : %f\n", run);
 
-	printf("MersenneTwister fini\n\n");
+	printf("\n	MersenneTwister fini\n\n");
 	fclose(f);
 }
 
@@ -193,7 +199,7 @@ void generate_E0(unsigned int nb, char *filename) {
 
 	uint32_t val;
 	E0 state;
-	init_lfsr_state_test(&state);
+	init_lfsr_state_random(&state);
 
 
 	if (f == NULL) {
@@ -210,13 +216,14 @@ void generate_E0(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*32, tab);
 
+	printf("  Frequency : %f\n\n", freq);
+
 	double run;
-	run = runs(nb*16, tab);
+	run = runs(nb*32, tab);
+	
+	printf("\n  Runs : %f\n", run);
 
-	printf("Frequency : %f\n", freq);
-	printf("Runs : %f\n", run);
-
-	printf("E0 fini\n\n");
+	printf("\n	E0 fini\n\n");
 	fclose(f);
 }
 
@@ -224,9 +231,29 @@ int main()
 {
 	printf("\n");
 
-	generate_vonNeumann(1024, "_VonNeumann.csv");
-	generate_mersenneTwister(1024, "_MersenneTwister.csv");
-	generate_E0(1024, "_E0.csv");
+	int i;
+	char name[64];
+
+	for(i=0; i<20; i++){
+
+		printf("\n\n\n======= TOUR %d =========\n\n", i);
+
+
+
+		sprintf(name, "VonNeumann_%d.csv", i);
+		generate_vonNeumann(1024, name);
+
+		printf("	---		\n\n");
+
+		sprintf(name, "MersenneTwister_%d.csv", i);
+		generate_mersenneTwister(1024, name);
+
+		printf("	---		\n\n");
+		
+		sprintf(name, "E0_%d.csv", i);
+		generate_E0(1024, name);
+
+	}
 
 	//testLFSR();
 

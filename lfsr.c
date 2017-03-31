@@ -1,4 +1,15 @@
 #include "lfsr.h"
+#include <stdlib.h>
+
+uint64_t rand_uint64t() {
+  uint64_t random = 
+    (((uint64_t) rand() <<  0) & 0x000000000000FFFFull) | 
+    (((uint64_t) rand() << 16) & 0x00000000FFFF0000ull) | 
+    (((uint64_t) rand() << 32) & 0x0000FFFF00000000ull) |
+    (((uint64_t) rand() << 48) & 0xFFFF000000000000ull);
+
+  return random  ;  
+}
 
 void init_lfsr_state_test(E0 *state) {
   
@@ -6,6 +17,15 @@ void init_lfsr_state_test(E0 *state) {
   state->lfsr_2_3 =  (uint64_t)0x208E1EC1;
   state->lfsr_2_3 +=  ((uint64_t) 0x063C142F0 << 31);
   state->lfsr_1_4 += ((uint64_t) 0x0F7A2A42BB << 25);
+
+  state->fsm = 3;
+  state->fsm += (1 << 2);
+}
+
+void init_lfsr_state_random(E0 *state) {
+  
+  state->lfsr_1_4 = (uint64_t)rand_uint64t();
+  state->lfsr_2_3 =  (uint64_t)rand_uint64t();
 
   state->fsm = 3;
   state->fsm += (1 << 2);

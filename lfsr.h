@@ -41,6 +41,7 @@ typedef struct E0_state E0;
 
 
 void init_lfsr_state_test(E0 *state);
+void init_lfsr_state_random(E0 *state);
 
 void print_lsfr1(E0 *state);
 void print_lsfr2(E0 *state);
@@ -56,6 +57,7 @@ void calcul_fsm(E0 *state);
 
 uint8_t next_bit(E0 *state);
 uint32_t genere32(E0 *state);
+uint64_t rand_uint64t();
 
 
 #endif
