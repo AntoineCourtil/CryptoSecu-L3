@@ -18,36 +18,43 @@ int rdtsc()
 	__asm__ __volatile__("rdtsc");
 }
 
-void test()
-{
-	/*word16 x=1111; // nombre entre 1000 et 9999 pour Von Neumann
-	struct mt19937p mt; // Pour Mersenne-Twister
-	int tmp = rand(), seed; // Pour Mersenne-Twister
+double frequency(int n, int* tab){
+	double sobs, pValeur;
+	int i, j, sizeWord, bit, res;
 
 
-	word16 output_VN; // sortie pour pour Von Neumann
-	word32 output_MT; // sortie pour Mersenne-Twister
+	res = 0;
+	sizeWord = n / 1024;
 
-               
-	// initialisation des graines des generateurs
+	//printf("sizeWord : %d\n", sizeWord);
+	//printf("bit : %d\n", get_bit(tab[0], 0));
 
-	srand(rdtsc());  // rand du C 
-	seed = rand();
-	sgenrand(time(NULL)+(tmp), &mt); // Mersenne-Twister
-	
-	// sorties des generateurs	
-	output_VN = Von_Neumann(&x); // Von Neumann
-	output_MT = genrand(&mt); // Mersenne-Twister
+	for(i=0; i<1024; i++){
+		for(j=0; j<sizeWord; j++){
 
-	int i;
 
-	for (i=0; i<10; i++)
-	{
-		// affichage
-		printf("- Generation de nombres aleatoires -\n");
-		printf("Von Neumann : %u\n",output_VN);
-		printf("Mersenne Twister : %u\n",output_MT);
-	}*/
+			bit = get_bit(tab[i], j);
+			//printf("Bit : %d\n", bit);
+
+			if (bit)
+			{
+				res++;
+			}
+			else
+			{
+				res--;
+			}
+		}
+	}
+
+
+	//printf("RES : %f", res);
+
+	sobs = abs(res)/sqrt(n);
+
+	pValeur = erfc(sobs/sqrt(2));
+
+	return pValeur;
 }
 
 void generate_vonNeumann(unsigned int nb, char *filename) {
@@ -58,6 +65,8 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	word16 x=1664; // nombre entre 1000 et 9999 pour Von Neumann
 	word16 output_VN; // sortie pour pour Von Neumann
 
+	int tab[1024];
+
 	
 	if (f == NULL) {
 		perror("Erreur lors de l'ouverture du fichier dans generate_vonNeumann");
@@ -67,7 +76,11 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	for (i = 0; i < nb; i++) {
 		output_VN = Von_Neumann(&x); // Von Neumannc
 		fprintf(f, "%u,\n", output_VN);
+		tab[i] = (int) output_VN;
 	}
+
+	double freq;
+	freq = frequency(1024*16, tab);
 
 	printf("Von_Neumann fini\n");
 	fclose(f);
@@ -126,9 +139,11 @@ void generate_E0(unsigned int nb, char *filename) {
 int main()
 {
 	
-	generate_vonNeumann(1024, "VonNeumann.csv");
-	generate_mersenneTwister(1024, "MersenneTwister.csv");
-	generate_E0(1024, "E0.csv");
+	generate_vonNeumann(1024, "_VonNeumann.csv");
+	//generate_mersenneTwister(1024, "_MersenneTwister.csv");
+	//generate_E0(1024, "_E0.csv");
+
+	//testLFSR();
 
 	return 0;
 }

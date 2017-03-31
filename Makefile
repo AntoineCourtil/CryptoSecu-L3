@@ -1,7 +1,7 @@
 OBJ = mersenne_twister.o von_neumann.o lfsr.o
 
 simu: main_debut.c $(OBJ)
-	gcc -Wall -std=c99 -pedantic -o simul -lm main_debut.c $(OBJ)
+	gcc -Wall -std=c99 -pedantic -o simul main_debut.c -lm $(OBJ)
 
 # Ces 2 lignes définissent la méthode de création d'un .o
 .SUFFIXES: .o
