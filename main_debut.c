@@ -48,11 +48,13 @@ double frequency(int n, int* tab){
 	}
 
 
-	//printf("RES : %f", res);
+	//printf("RES : %d\n", res);
 
 	sobs = abs(res)/sqrt(n);
+	//printf("SOBS : %f\n", sobs);
 
 	pValeur = erfc(sobs/sqrt(2));
+	//printf("pValeur : %f\n", pValeur);
 
 	return pValeur;
 }
@@ -65,7 +67,7 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	word16 x=1664; // nombre entre 1000 et 9999 pour Von Neumann
 	word16 output_VN; // sortie pour pour Von Neumann
 
-	int tab[1024];
+	int tab[nb];
 
 	
 	if (f == NULL) {
@@ -80,9 +82,11 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	}
 
 	double freq;
-	freq = frequency(1024*16, tab);
+	freq = frequency(nb*16, tab);
 
-	printf("Von_Neumann fini\n");
+	printf("Frequency : %f\n", freq);
+
+	printf("Von_Neumann fini\n\n");
 	fclose(f);
 }
 
@@ -93,6 +97,8 @@ void generate_mersenneTwister(unsigned int nb, char *filename) {
 	struct mt19937p mt; // Pour Mersenne-Twister
 	int tmp = rand(); // Pour Mersenne-Twister
 	word32 output_MT; // sortie pour Mersenne-Twister
+
+	int tab[nb];
 
 	srand(rdtsc());  // rand du C 
 	sgenrand(time(NULL)+(tmp), &mt); // Mersenne-Twister
@@ -107,15 +113,23 @@ void generate_mersenneTwister(unsigned int nb, char *filename) {
 	for (i = 0; i < nb; i++) {
 		output_MT = genrand(&mt); // Von Neumannc
 		fprintf(f, "%u,\n", output_MT);
+		tab[i] = (int) output_MT;
 	}
 
-	printf("MersenneTwister fini\n");
+	double freq;
+	freq = frequency(nb*32, tab);
+
+	printf("Frequency : %f\n", freq);
+
+	printf("MersenneTwister fini\n\n");
 	fclose(f);
 }
 
 void generate_E0(unsigned int nb, char *filename) {
 	int i;
 	FILE *f = fopen(filename, "w");
+
+	int tab[nb];
 
 	uint32_t val;
 	E0 state;
@@ -130,18 +144,25 @@ void generate_E0(unsigned int nb, char *filename) {
 	for (i = 0; i < nb; i++) {
 		val = genere32(&state);
 		fprintf(f, "%u,\n", val);
+		tab[i] = (int) val;
 	}
 
-	printf("E0 fini\n");
+	double freq;
+	freq = frequency(nb*32, tab);
+
+	printf("Frequency : %f\n", freq);
+
+	printf("E0 fini\n\n");
 	fclose(f);
 }
 
 int main()
 {
-	
+	printf("\n");
+
 	generate_vonNeumann(1024, "_VonNeumann.csv");
-	//generate_mersenneTwister(1024, "_MersenneTwister.csv");
-	//generate_E0(1024, "_E0.csv");
+	generate_mersenneTwister(1024, "_MersenneTwister.csv");
+	generate_E0(1024, "_E0.csv");
 
 	//testLFSR();
 
