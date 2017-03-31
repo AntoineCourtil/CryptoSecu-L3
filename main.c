@@ -59,6 +59,58 @@ double frequency(int n, int* tab){
 	return pValeur;
 }
 
+double runs(int n, int* tab){
+	double pValeur, pi, r;
+	int i, j, res, vObs, bit, exBit, sizeWord;
+
+	sizeWord = n / 1024;
+
+	res = 0;
+	vObs = 0;
+
+	exBit = get_bit(tab[0], 0);
+
+	sizeWord = n / 1024;
+
+	for(i=0; i<1024; i++){
+		for(j=0; j<sizeWord; j++){
+
+			bit = get_bit(tab[i], j);
+
+			if (bit)
+			{
+				res++;
+			}
+
+			if(bit != exBit){
+				vObs++;
+			}
+
+			exBit = bit;
+		}
+	}
+
+	vObs++;
+
+	pi = res / (double)n;
+
+	//printf("PI : %f\n", pi);
+
+	//printf("vObs : %d\n", vObs);
+
+	r = 2 / sqrt(n);
+
+	if( abs(pi-0.5) >= r){
+		return 0.0;
+	}
+
+	//printf("		a	 : %f\n", abs(vObs - 2*n*pi*(1-pi)) / 2*sqrt(2*n)*(1-pi));
+
+	pValeur = erfc ( abs(vObs - 2*n*pi*(1-pi)) / 2*sqrt(2*n)*(1-pi) );
+
+	return pValeur;
+}
+
 void generate_vonNeumann(unsigned int nb, char *filename) {
 	int i;
 	FILE *f = fopen(filename, "w");
@@ -84,7 +136,11 @@ void generate_vonNeumann(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*16, tab);
 
+	double run;
+	run = runs(nb*16, tab);
+
 	printf("Frequency : %f\n", freq);
+	printf("Runs : %f\n", run);
 
 	printf("Von_Neumann fini\n\n");
 	fclose(f);
@@ -119,7 +175,11 @@ void generate_mersenneTwister(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*32, tab);
 
+	double run;
+	run = runs(nb*16, tab);
+
 	printf("Frequency : %f\n", freq);
+	printf("Runs : %f\n", run);
 
 	printf("MersenneTwister fini\n\n");
 	fclose(f);
@@ -150,7 +210,11 @@ void generate_E0(unsigned int nb, char *filename) {
 	double freq;
 	freq = frequency(nb*32, tab);
 
+	double run;
+	run = runs(nb*16, tab);
+
 	printf("Frequency : %f\n", freq);
+	printf("Runs : %f\n", run);
 
 	printf("E0 fini\n\n");
 	fclose(f);
